@@ -114,6 +114,13 @@ android {
 
         multiDexEnabled true
 
+        // Telegram API credentials: read from local.properties (gitignored) so secrets stay out of git.
+        // Falls back to Telegram's public dummy values when not provided.
+        def tgAppId = getProps("TELEGRAM_APP_ID")?.toString()?.trim()
+        def tgAppHash = getProps("TELEGRAM_APP_HASH")?.toString()?.trim()
+        buildConfigField "int", "APP_ID", (tgAppId != null && !tgAppId.isEmpty()) ? tgAppId : "4"
+        buildConfigField "String", "APP_HASH", "\"" + ((tgAppHash != null && !tgAppHash.isEmpty()) ? tgAppHash : "014b35b6184100b085b0d0572f9b5103") + "\""
+
         externalNativeBuild {
             cmake {
                 version '3.10.2'

@@ -650,7 +650,8 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
         parentFragment = fragment;
         Theme.createDialogsResources(context);
         drawMonoforumAvatar = false;
-        avatarImage.setRoundRadius(dp(28));
+        avatarImage.setRoundRadius(dp(6)); // square (rounded) chat-list avatars instead of circles
+        avatarDrawable.setRoundRadius(dp(6)); // match the placeholder (initials) shape
         for (int i = 0; i < thumbImage.length; ++i) {
             thumbImage[i] = new ImageReceiver(this);
             thumbImage[i].ignoreNotifications = true;
@@ -3106,7 +3107,7 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
                 thumbImage[i].setImageBitmap((BitmapDrawable) null);
             }
             drawMonoforumAvatar = false;
-            avatarImage.setRoundRadius(dp(28));
+            avatarImage.setRoundRadius(dp(6)); // square (rounded) chat-list avatars instead of circles
             drawUnmute = false;
         } else {
             int oldUnreadCount = unreadCount;
@@ -3527,7 +3528,7 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
                 reactionsMentionsAnimator.start();
             }
             drawMonoforumAvatar = !isFolderCell() && chat != null && chat.monoforum;
-            avatarImage.setRoundRadius(drawMonoforumAvatar ? 1 : chat != null && chat.forum && currentDialogFolderId == 0 && !useFromUserAsAvatar || !isSavedDialog && user != null && user.self && MessagesController.getInstance(currentAccount).savedViewAsChats ? dp(16) : dp(28));
+            avatarImage.setRoundRadius(dp(6)); // square (rounded) chat-list avatars instead of circles (all chat types)
         }
         if (!isTopic && (getMeasuredWidth() != 0 || getMeasuredHeight() != 0)) {
             rebuildLayout = true;
