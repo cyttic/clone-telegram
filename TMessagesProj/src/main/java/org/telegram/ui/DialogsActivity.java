@@ -3443,8 +3443,11 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             } else {
                 statusDrawable = new AnimatedEmojiDrawable.SwapAnimatedEmojiDrawable(null, dp(26));
                 statusDrawable.center = true;
-                // Custom build: show a custom app name as text instead of the Telegram wordmark logo image.
-                actionBar.setTitle("KrimbaGram", statusDrawable);
+                // KrimbaGram: two-tone monospace wordmark (KRIMBA green / GRAM amber) instead of the logo
+                SpannableStringBuilder kgTitle = new SpannableStringBuilder("KRIMBAGRAM");
+                kgTitle.setSpan(new android.text.style.ForegroundColorSpan(0xFFFFB24A), 6, 10, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                actionBar.setTitle(kgTitle, statusDrawable);
+                startKrimbaClock();
                 updateStatus(UserConfig.getInstance(currentAccount).getCurrentUser(), false);
             }
             if (folderId == 0) {
@@ -6880,9 +6883,32 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         }
     }
 
+    // KrimbaGram cyberdeck: live digital clock shown as the action-bar subtitle on the chats screen
+    private Runnable krimbaClock;
+    private void startKrimbaClock() {
+        if (krimbaClock == null) {
+            krimbaClock = () -> {
+                try {
+                    java.util.Calendar c = java.util.Calendar.getInstance();
+                    String t = String.format(java.util.Locale.US, "通信 // %02d:%02d:%02d · SECURE",
+                            c.get(java.util.Calendar.HOUR_OF_DAY), c.get(java.util.Calendar.MINUTE), c.get(java.util.Calendar.SECOND));
+                    if (actionBar != null) {
+                        actionBar.setSubtitle(t);
+                    }
+                } catch (Exception ignore) {}
+                AndroidUtilities.runOnUIThread(krimbaClock, 1000);
+            };
+        }
+        AndroidUtilities.cancelRunOnUIThread(krimbaClock);
+        krimbaClock.run();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
+        if (folderId == 0 && !onlySelect) {
+            startKrimbaClock();
+        }
         if (dialogStoriesCell != null) {
             dialogStoriesCell.onResume();
         }
@@ -7098,6 +7124,9 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
     @Override
     public void onPause() {
         super.onPause();
+        if (krimbaClock != null) {
+            AndroidUtilities.cancelRunOnUIThread(krimbaClock);
+        }
         if (storiesBulletin != null) {
             storiesBulletin.hide();
             storiesBulletin = null;

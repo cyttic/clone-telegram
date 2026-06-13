@@ -607,7 +607,7 @@ public class SharedConfig {
             repeatMode = preferences.getInt("repeatMode", 0);
             fontSize = preferences.getInt("fons_size", AndroidUtilities.isTablet() ? 18 : 16);
             fontSizeIsDefault = !preferences.contains("fons_size");
-            bubbleRadius = preferences.getInt("bubbleRadius", 17);
+            bubbleRadius = Math.min(preferences.getInt("bubbleRadius", 3), 3); // KrimbaGram: rectangular bubbles
             ivFontSize = preferences.getInt("iv_font_size", fontSize);
             allowBigEmoji = preferences.getBoolean("allowBigEmoji", true);
             useSystemEmoji = preferences.getBoolean("useSystemEmoji", false);

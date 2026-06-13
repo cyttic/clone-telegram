@@ -289,6 +289,21 @@ public class ApplicationLoader extends Application {
 
         super.onCreate();
 
+        // KrimbaGram cyberdeck: force a monospace terminal typeface for ALL text, including the
+        // regular/system faces that Telegram leaves as the platform default.
+        try {
+            android.graphics.Typeface mono = android.graphics.Typeface.createFromAsset(applicationContext.getAssets(), "fonts/rmono.ttf");
+            if (mono != null) {
+                for (String f : new String[]{"DEFAULT", "DEFAULT_BOLD", "SANS_SERIF", "SERIF", "MONOSPACE"}) {
+                    try {
+                        java.lang.reflect.Field field = android.graphics.Typeface.class.getDeclaredField(f);
+                        field.setAccessible(true);
+                        field.set(null, mono);
+                    } catch (Throwable ignore) {}
+                }
+            }
+        } catch (Throwable ignore) {}
+
         if (BuildVars.LOGS_ENABLED) {
             FileLog.d("app start time = " + (startTime = SystemClock.elapsedRealtime()));
             try {

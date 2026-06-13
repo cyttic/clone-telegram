@@ -2535,17 +2535,21 @@ public class ImageReceiver implements NotificationCenter.NotificationCenterDeleg
     }
 
     public void setRoundRadius(int[] value) {
+        // KrimbaGram cyberdeck: clamp every corner radius so all images (avatars especially)
+        // render as rounded squares and never as circles.
+        final int maxRadius = AndroidUtilities.dp(6);
         boolean changed = false;
-        int firstValue = value[0];
+        int firstValue = Math.min(value[0], maxRadius);
         isRoundRect = true;
         for (int a = 0; a < roundRadius.length; a++) {
-            if (roundRadius[a] != value[a]) {
+            int v = Math.min(value[a], maxRadius);
+            if (roundRadius[a] != v) {
                 changed = true;
             }
-            if (firstValue != value[a]) {
+            if (firstValue != v) {
                 isRoundRect = false;
             }
-            roundRadius[a] = value[a];
+            roundRadius[a] = v;
         }
         if (changed) {
             if (currentImageDrawable != null && imageShader == null) {

@@ -588,11 +588,11 @@ public class AvatarDrawable extends Drawable {
                 canvas.save();
                 canvas.rotate(-45, size / 2.0f, size / 2.0f);
             }
-            if (roundRadius > 0) {
+            {
+                // KrimbaGram cyberdeck: avatar placeholders are rounded squares, never circles
+                int r = roundRadius > 0 ? roundRadius : AndroidUtilities.dp(6);
                 AndroidUtilities.rectTmp.set(0, 0, size, size);
-                canvas.drawRoundRect(AndroidUtilities.rectTmp, roundRadius, roundRadius, backgroundPaint);
-            } else {
-                canvas.drawCircle(size / 2.0f, size / 2.0f, size / 2.0f, backgroundPaint);
+                canvas.drawRoundRect(AndroidUtilities.rectTmp, r, r, backgroundPaint);
             }
             if (rotate45Background) {
                 canvas.restore();
@@ -773,6 +773,7 @@ public class AvatarDrawable extends Drawable {
     }
 
     public void setRoundRadius(int roundRadius) {
-        this.roundRadius = roundRadius;
+        // KrimbaGram cyberdeck: cap the radius so avatars are rounded squares, never circles
+        this.roundRadius = Math.min(roundRadius, AndroidUtilities.dp(6));
     }
 }

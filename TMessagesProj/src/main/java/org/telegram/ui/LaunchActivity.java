@@ -505,6 +505,9 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
 
         frameLayout.addView(drawerLayoutContainer, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
 
+        // KrimbaGram cyberdeck: CRT electron-beam overlay on top of everything (non-interactive)
+        frameLayout.addView(new org.telegram.ui.Components.CrtOverlayView(this), LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
+
         themeSwitchSunView = new ImageView(this) {
             @Override
             protected void onDraw(Canvas canvas) {
