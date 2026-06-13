@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    html,body{margin:0;padding:0;}
+    body{background:#02080a;font-family:'JetBrains Mono',monospace;-webkit-font-smoothing:antialiased;}
+    ::-webkit-scrollbar{width:0px;background:transparent;}
+    @keyframes kg-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+    @keyframes kg-pulse{0%,100%{opacity:.35}50%{opacity:1}}
+    @keyframes kg-flicker{0%,100%{opacity:.06}3%{opacity:.02}6%{opacity:.08}9%{opacity:.04}50%{opacity:.05}}
+    @keyframes kg-scanband{0%{transform:translateY(-30%)}100%{transform:translateY(760px)}}
+    @keyframes kg-rain{0%{background-position:0 0,0 0}100%{background-position:0 900px,0 1100px}}
+    @keyframes kg-dots{0%,100%{opacity:.2}50%{opacity:1}}
+    @keyframes kg-glitch{0%,88%,100%{text-shadow:0 0 14px var(--glow,rgba(77,255,163,.5));transform:translate(0,0)}90%{text-shadow:-2px 0 #ff6a5d,2px 0 #54e6dd;transform:translate(1px,0)}93%{text-shadow:2px 0 #ff6a5d,-2px 0 #54e6dd;transform:translate(-1px,0)}96%{text-shadow:0 0 14px var(--glow,rgba(77,255,163,.5));transform:translate(0,0)}}
+  </style>
+</helmet>
+
+<div style="--phos:{{ phos }};--glow:{{ glow }};min-height:100vh;width:100%;display:flex;align-items:center;justify-content:center;padding:34px 16px;background:radial-gradient(120% 70% at 50% -10%, rgba(255,150,60,.12), rgba(2,8,10,0) 45%), radial-gradient(90% 80% at 50% 120%, rgba(60,180,140,.10), rgba(2,8,10,0) 50%), #04090b;">
+
+  <!-- rain / atmosphere -->
+  <div style="position:fixed;inset:0;pointer-events:none;opacity:.5;background-image:repeating-linear-gradient(106deg, rgba(160,220,200,0) 0 26px, rgba(160,220,200,.05) 26px 27px), repeating-linear-gradient(106deg, rgba(160,220,200,0) 0 52px, rgba(120,200,255,.04) 52px 53px);background-size:auto 900px, auto 1100px;animation:kg-rain 5.5s linear infinite;"></div>
+
+  <!-- ===================== CYBERDECK FRAME ===================== -->
+  <div style="position:relative;width:432px;max-width:100%;border-radius:48px;padding:18px 16px 22px;background:linear-gradient(162deg,#101b16 0%,#070d0c 55%,#04080a 100%);box-shadow:0 0 0 1px rgba(120,200,160,.10), 0 2px 0 0 rgba(120,200,160,.04) inset, 0 40px 90px rgba(0,0,0,.75);">
+
+    <!-- top bezel -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:2px 12px 12px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:#3c6a55;">
+      <span>KRIMBAGRAM ⌁ MK-7</span>
+      <span style="display:flex;gap:18px;align-items:center;">
+        <span style="display:flex;gap:5px;align-items:center;">
+          <span style="width:5px;height:5px;border-radius:50%;background:#4dffa3;box-shadow:0 0 6px #4dffa3;animation:kg-pulse 2.4s infinite;"></span>
+          <span style="width:5px;height:5px;border-radius:50%;background:#ffb24a;box-shadow:0 0 6px #ffb24a;"></span>
+          <span style="width:5px;height:5px;border-radius:50%;background:#ff6a5d;box-shadow:0 0 6px #ff6a5d;animation:kg-pulse 3.7s infinite;"></span>
+        </span>
+        <span style="display:flex;gap:3px;align-items:center;">
+          <span style="width:34px;height:4px;border-radius:2px;background:linear-gradient(90deg,#15241d,#0a120f);"></span>
+        </span>
+      </span>
+    </div>
+
+    <!-- ===================== CRT SCREEN ===================== -->
+    <div style="position:relative;width:100%;height:760px;border-radius:30px;overflow:hidden;border:1px solid rgba(77,255,163,.16);background:radial-gradient(130% 95% at 50% 0%, #082a1d 0%, #04140d 46%, #020a07 100%);box-shadow:0 0 50px rgba(77,255,163,.07) inset, 0 0 0 6px #060d0b;">
+
+      <!-- screen content column -->
+      <div style="position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;color:#bdeccf;">
+
+        <!-- STATUS BAR -->
+        <sc-if value="{{ showChrome }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px 9px;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1.5px;color:#3f9d70;border-bottom:1px solid rgba(77,255,163,.12);flex-shrink:0;">
+            <span style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+              <span style="width:6px;height:6px;border-radius:50%;background:var(--phos,#4dffa3);box-shadow:0 0 7px var(--phos,#4dffa3);animation:kg-pulse 2s infinite;flex-shrink:0;"></span><span style="white-space:nowrap;">SECURE</span>
+            </span>
+            <span style="color:var(--phos,#4dffa3);text-shadow:0 0 7px var(--glow,rgba(77,255,163,.5));letter-spacing:2px;">{{ clock }}</span>
+            <span style="display:flex;align-items:center;gap:7px;"><span style="letter-spacing:1px;color:var(--phos,#4dffa3);">▮▮▮▯</span><span>87%</span></span>
+          </div>
+        </sc-if>
+
+        <!-- main switch area -->
+        <div style="flex:1;min-height:0;display:flex;flex-direction:column;">
+
+          <!-- =========== BOOT =========== -->
+          <sc-if value="{{ isBoot }}" hint-placeholder-val="{{ true }}">
+            <div style="flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;padding:30px 28px;font-family:'Share Tech Mono',monospace;">
+              <div style="font-size:10px;letter-spacing:3px;color:#2f8a5e;margin-bottom:16px;">クリンバ・グラム // SECURE NEURAL TERMINAL</div>
+              <div style="font-size:38px;line-height:.95;letter-spacing:2px;color:var(--phos,#4dffa3);animation:kg-glitch 4s infinite steps(1);">KRIMBA<span style="color:#ffb24a;">GRAM</span></div>
+              <div style="height:1px;background:rgba(77,255,163,.28);margin:18px 0;"></div>
+              <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:#7fe9b6;min-height:230px;">
+                <sc-for list="{{ boot }}" as="line" hint-placeholder-count="5">
+                  <div style="text-shadow:0 0 6px var(--glow,rgba(77,255,163,.35));">{{ line }}</div>
+                </sc-for>
+                <sc-if value="{{ bootNotDone }}" hint-placeholder-val="{{ true }}">
+                  <div style="color:var(--phos,#4dffa3);">» <span style="animation:kg-blink 1s steps(1) infinite;">█</span></div>
+                </sc-if>
+                <sc-if value="{{ bootDone }}">
+                  <div style="margin-top:22px;">
+                    <button onClick="{{ jackIn }}" style="width:100%;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:15px;letter-spacing:4px;color:#04140d;background:var(--phos,#4dffa3);border:none;padding:16px;border-radius:4px;box-shadow:0 0 24px var(--glow,rgba(77,255,163,.5));animation:kg-pulse 1.8s infinite;">▶ JACK IN</button>
+                    <div style="text-align:center;font-size:9px;letter-spacing:2px;color:#3c8a64;margin-top:9px;">PRESS TO AUTHENTICATE GHOST</div>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- =========== CHATS =========== -->
+          <sc-if value="{{ isChats }}">
+            <div style="flex:1;min-height:0;display:flex;flex-direction:column;">
+              <div style="display:flex;align-items:flex-end;justify-content:space-between;padding:14px 16px 10px;flex-shrink:0;">
+                <div>
+                  <div style="font-family:'Share Tech Mono',monospace;font-size:20px;letter-spacing:1px;color:var(--phos,#4dffa3);text-shadow:0 0 9px var(--glow,rgba(77,255,163,.5));">TRANSMISSIONS</div>
+                  <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:#3c8a64;margin-top:2px;">通信 // 7 ACTIVE CHANNELS</div>
+                </div>
+                <span style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:#ffb24a;border:1px solid rgba(255,178,74,.4);padding:5px 8px;border-radius:3px;">⚿ E2E</span>
+              </div>
+              <div style="margin:0 16px 8px;display:flex;align-items:center;gap:8px;border:1px solid rgba(77,255,163,.18);border-radius:4px;padding:8px 11px;font-family:'Share Tech Mono',monospace;font-size:11px;color:#3c8a64;flex-shrink:0;">
+                <span style="color:var(--phos,#4dffa3);">⌕</span><span>grep //channels --decrypt</span>
+              </div>
+              <div style="flex:1;min-height:0;overflow-y:auto;padding:2px 0 10px;">
+                <sc-for list="{{ chats }}" as="chat" hint-placeholder-count="6">
+                  <div onClick="{{ chat.onOpen }}" style="display:flex;gap:12px;align-items:center;padding:12px 16px;cursor:pointer;border-bottom:1px solid rgba(77,255,163,.07);">
+                    <div style="position:relative;width:46px;height:46px;flex-shrink:0;border:1px solid rgba(77,255,163,.3);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:18px;color:var(--phos,#4dffa3);background-image:repeating-linear-gradient(135deg, rgba(77,255,163,.1) 0 3px, rgba(0,0,0,0) 3px 7px);">
+                      {{ chat.kana }}
+                      <span style="position:absolute;right:-4px;bottom:-4px;width:9px;height:9px;border-radius:50%;border:2px solid #051009;background:{{ chat.statusColor }};"></span>
+                    </div>
+                    <div style="flex:1;min-width:0;">
+                      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                        <span style="font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:.5px;color:#d7f7e5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ chat.handle }}</span>
+                        <span style="font-family:'Share Tech Mono',monospace;font-size:9px;color:#3c8a64;flex-shrink:0;">{{ chat.time }}</span>
+                      </div>
+                      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:3px;">
+                        <span style="font-size:11px;color:#6fa98c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ chat.preview }}</span>
+                        <sc-if value="{{ chat.unread }}">
+                          <span style="flex-shrink:0;font-family:'Share Tech Mono',monospace;font-size:10px;min-width:18px;text-align:center;color:#04140d;background:var(--phos,#4dffa3);border-radius:9px;padding:1px 5px;box-shadow:0 0 10px var(--glow,rgba(77,255,163,.5));">{{ chat.unread }}</span>
+                        </sc-if>
+                      </div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- =========== CONTACTS =========== -->
+          <sc-if value="{{ isContacts }}">
+            <div style="flex:1;min-height:0;display:flex;flex-direction:column;">
+              <div style="display:flex;align-items:flex-end;justify-content:space-between;padding:14px 16px 12px;flex-shrink:0;">
+                <div>
+                  <div style="font-family:'Share Tech Mono',monospace;font-size:20px;letter-spacing:1px;color:var(--phos,#4dffa3);text-shadow:0 0 9px var(--glow,rgba(77,255,163,.5));">OPERATIVES</div>
+                  <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:#3c8a64;margin-top:2px;">接触 // GHOST REGISTRY</div>
+                </div>
+                <span style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--phos,#4dffa3);border:1px solid rgba(77,255,163,.4);padding:5px 8px;border-radius:3px;cursor:pointer;">+ NODE</span>
+              </div>
+              <div style="flex:1;min-height:0;overflow-y:auto;padding:0 16px 14px;display:flex;flex-direction:column;gap:9px;">
+                <sc-for list="{{ contacts }}" as="c" hint-placeholder-count="6">
+                  <div onClick="{{ c.onOpen }}" style="display:flex;gap:12px;align-items:center;padding:11px 12px;cursor:pointer;border:1px solid rgba(77,255,163,.14);border-radius:5px;background:rgba(10,28,19,.4);">
+                    <div style="width:42px;height:42px;flex-shrink:0;border:1px solid rgba(77,255,163,.3);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:16px;color:var(--phos,#4dffa3);background-image:repeating-linear-gradient(135deg, rgba(77,255,163,.1) 0 3px, rgba(0,0,0,0) 3px 7px);">{{ c.kana }}</div>
+                    <div style="flex:1;min-width:0;">
+                      <div style="font-family:'Share Tech Mono',monospace;font-size:13px;color:#d7f7e5;">{{ c.handle }}</div>
+                      <div style="display:flex;align-items:center;gap:6px;margin-top:3px;">
+                        <span style="width:6px;height:6px;border-radius:50%;background:{{ c.statusColor }};box-shadow:0 0 6px {{ c.statusColor }};"></span>
+                        <span style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:#6fa98c;">{{ c.status }}</span>
+                      </div>
+                    </div>
+                    <span style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--phos,#4dffa3);">{{ c.signal }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- =========== CONVERSATION =========== -->
+          <sc-if value="{{ isChat }}">
+            <div style="flex:1;min-height:0;display:flex;flex-direction:column;">
+              <!-- chat header -->
+              <div style="display:flex;align-items:center;gap:11px;padding:9px 14px;border-bottom:1px solid rgba(77,255,163,.14);flex-shrink:0;">
+                <button onClick="{{ navChats }}" style="cursor:pointer;background:none;border:none;color:var(--phos,#4dffa3);font-family:'Share Tech Mono',monospace;font-size:18px;padding:2px 4px;">‹</button>
+                <div onClick="{{ openProfile }}" style="display:flex;align-items:center;gap:10px;cursor:pointer;flex:1;min-width:0;">
+                  <div style="width:36px;height:36px;flex-shrink:0;border:1px solid rgba(77,255,163,.3);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--phos,#4dffa3);background-image:repeating-linear-gradient(135deg, rgba(77,255,163,.1) 0 3px, rgba(0,0,0,0) 3px 7px);">{{ active.kana }}</div>
+                  <div style="min-width:0;">
+                    <div style="font-family:'Share Tech Mono',monospace;font-size:13px;color:#d7f7e5;letter-spacing:.5px;">{{ active.handle }}</div>
+                    <div style="display:flex;align-items:center;gap:5px;margin-top:1px;">
+                      <span style="width:5px;height:5px;border-radius:50%;background:{{ active.statusColor }};box-shadow:0 0 6px {{ active.statusColor }};"></span>
+                      <span style="font-family:'Share Tech Mono',monospace;font-size:9px;color:#3c8a64;letter-spacing:1px;">{{ active.status }} · 暗号化</span>
+                    </div>
+                  </div>
+                </div>
+                <span style="font-family:'Share Tech Mono',monospace;font-size:15px;color:#3c8a64;">⋮</span>
+              </div>
+              <!-- messages -->
+              <div ref="{{ msgRef }}" style="flex:1;min-height:0;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:13px;">
+                <sc-for list="{{ msgs }}" as="m" hint-placeholder-count="4">
+                  <sc-if value="{{ m.sys }}">
+                    <div style="text-align:center;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1.5px;color:#3c8a64;padding:2px 0;">── {{ m.text }} ──</div>
+                  </sc-if>
+                  <sc-if value="{{ m.them }}">
+                    <div style="align-self:flex-start;max-width:80%;">
+                      <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:1px;color:#3c8a64;margin-bottom:3px;">▸ {{ active.handle }} · {{ m.time }}</div>
+                      <div style="border:1px solid rgba(77,255,163,.28);border-left:2px solid var(--phos,#4dffa3);border-radius:3px;padding:9px 11px;font-size:12.5px;line-height:1.45;color:#d7f7e5;background:rgba(12,32,22,.5);">{{ m.text }}</div>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ m.mine }}">
+                    <div style="align-self:flex-end;max-width:80%;text-align:right;">
+                      <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:1px;color:#9a7a3a;margin-bottom:3px;">YOU · {{ m.time }} ◂</div>
+                      <div style="border:1px solid rgba(255,178,74,.4);border-right:2px solid #ffb24a;border-radius:3px;padding:9px 11px;font-size:12.5px;line-height:1.45;color:#ffe2b0;background:rgba(40,28,10,.45);text-align:left;">{{ m.text }}</div>
+                    </div>
+                  </sc-if>
+                </sc-for>
+                <sc-if value="{{ awaiting }}">
+                  <div style="align-self:flex-start;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;color:#3c8a64;display:flex;align-items:center;gap:6px;">
+                    DECRYPTING INCOMING
+                    <span style="color:var(--phos,#4dffa3);">
+                      <span style="animation:kg-dots 1.2s infinite;">▓</span><span style="animation:kg-dots 1.2s .2s infinite;">▓</span><span style="animation:kg-dots 1.2s .4s infinite;">▓</span>
+                    </span>
+                  </div>
+                </sc-if>
+              </div>
+              <!-- composer -->
+              <div style="display:flex;align-items:center;gap:9px;padding:10px 12px;border-top:1px solid rgba(77,255,163,.16);flex-shrink:0;background:rgba(4,16,11,.6);">
+                <span style="font-family:'Share Tech Mono',monospace;color:var(--phos,#4dffa3);font-size:14px;">›</span>
+                <input value="{{ draft }}" onChange="{{ onDraft }}" onKeyDown="{{ onKey }}" placeholder="transmit encrypted message..." style="flex:1;background:none;border:none;outline:none;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#d7f7e5;caret-color:var(--phos,#4dffa3);" />
+                <button onClick="{{ send }}" style="cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;color:#04140d;background:var(--phos,#4dffa3);border:none;padding:8px 13px;border-radius:3px;box-shadow:0 0 12px var(--glow,rgba(77,255,163,.4));">TX ▶</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- =========== PROFILE =========== -->
+          <sc-if value="{{ isProfile }}">
+            <div style="flex:1;min-height:0;display:flex;flex-direction:column;">
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;flex-shrink:0;">
+                <button onClick="{{ navChats }}" style="cursor:pointer;background:none;border:none;color:var(--phos,#4dffa3);font-family:'Share Tech Mono',monospace;font-size:18px;">‹</button>
+                <span style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;color:#3c8a64;">IDENTITY READOUT // 身元</span>
+              </div>
+              <div style="flex:1;min-height:0;overflow-y:auto;padding:6px 18px 18px;">
+                <!-- avatar -->
+                <div style="display:flex;justify-content:center;margin:8px 0 16px;">
+                  <div style="position:relative;width:130px;height:130px;border:1px solid rgba(77,255,163,.35);display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:44px;color:var(--phos,#4dffa3);text-shadow:0 0 14px var(--glow,rgba(77,255,163,.5));background-image:repeating-linear-gradient(135deg, rgba(77,255,163,.09) 0 4px, rgba(0,0,0,0) 4px 9px);">
+                    {{ active.kana }}
+                    <span style="position:absolute;top:-1px;left:-1px;width:16px;height:16px;border-top:2px solid var(--phos,#4dffa3);border-left:2px solid var(--phos,#4dffa3);"></span>
+                    <span style="position:absolute;top:-1px;right:-1px;width:16px;height:16px;border-top:2px solid var(--phos,#4dffa3);border-right:2px solid var(--phos,#4dffa3);"></span>
+                    <span style="position:absolute;bottom:-1px;left:-1px;width:16px;height:16px;border-bottom:2px solid var(--phos,#4dffa3);border-left:2px solid var(--phos,#4dffa3);"></span>
+                    <span style="position:absolute;bottom:-1px;right:-1px;width:16px;height:16px;border-bottom:2px solid var(--phos,#4dffa3);border-right:2px solid var(--phos,#4dffa3);"></span>
+                  </div>
+                </div>
+                <div style="text-align:center;font-family:'Share Tech Mono',monospace;font-size:20px;letter-spacing:1px;color:#d7f7e5;">{{ active.handle }}</div>
+                <div style="text-align:center;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;color:#3c8a64;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:7px;">
+                  <span style="width:6px;height:6px;border-radius:50%;background:{{ active.statusColor }};box-shadow:0 0 7px {{ active.statusColor }};"></span>{{ active.status }} · LAST PING {{ active.time }}
+                </div>
+                <!-- actions -->
+                <div style="display:flex;gap:9px;margin:18px 0;">
+                  <button onClick="{{ openActive }}" style="flex:1;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;color:#04140d;background:var(--phos,#4dffa3);border:none;padding:11px 0;border-radius:3px;">◈ MSG</button>
+                  <button style="flex:1;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--phos,#4dffa3);background:none;border:1px solid rgba(77,255,163,.4);padding:11px 0;border-radius:3px;">☏ CALL</button>
+                  <button style="flex:1;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;color:#ff6a5d;background:none;border:1px solid rgba(255,106,93,.4);padding:11px 0;border-radius:3px;">⊘ BLOCK</button>
+                </div>
+                <!-- readout -->
+                <div style="border:1px solid rgba(77,255,163,.16);border-radius:5px;overflow:hidden;font-family:'Share Tech Mono',monospace;font-size:11px;">
+                  <sc-for list="{{ active.readout }}" as="row" hint-placeholder-count="5">
+                    <div style="display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid rgba(77,255,163,.08);">
+                      <span style="color:#3c8a64;letter-spacing:1px;">{{ row.k }}</span>
+                      <span style="color:#d7f7e5;text-align:right;">{{ row.v }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+                <!-- stats -->
+                <div style="display:flex;gap:9px;margin-top:14px;">
+                  <div style="flex:1;text-align:center;border:1px solid rgba(77,255,163,.16);border-radius:4px;padding:11px 0;">
+                    <div style="font-family:'Share Tech Mono',monospace;font-size:18px;color:var(--phos,#4dffa3);">248</div>
+                    <div style="font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px;color:#3c8a64;margin-top:3px;">DATA PKTS</div>
+                  </div>
+                  <div style="flex:1;text-align:center;border:1px solid rgba(77,255,163,.16);border-radius:4px;padding:11px 0;">
+                    <div style="font-family:'Share Tech Mono',monospace;font-size:18px;color:#ffb24a;">17</div>
+                    <div style="font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px;color:#3c8a64;margin-top:3px;">IMAGES</div>
+                  </div>
+                  <div style="flex:1;text-align:center;border:1px solid rgba(77,255,163,.16);border-radius:4px;padding:11px 0;">
+                    <div style="font-family:'Share Tech Mono',monospace;font-size:18px;color:#54e6dd;">04</div>
+                    <div style="font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px;color:#3c8a64;margin-top:3px;">KEYS</div>
+                  </div>
+                </div>
+                <div style="margin-top:14px;font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:1px;color:#2f6b50;word-break:break-all;line-height:1.6;">GHOST SIG ⌁ {{ active.hash }}</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- =========== SETTINGS =========== -->
+          <sc-if value="{{ isSettings }}">
+            <div style="flex:1;min-height:0;display:flex;flex-direction:column;">
+              <div style="padding:14px 16px 10px;flex-shrink:0;">
+                <div style="font-family:'Share Tech Mono',monospace;font-size:20px;letter-spacing:1px;color:var(--phos,#4dffa3);text-shadow:0 0 9px var(--glow,rgba(77,255,163,.5));">SYSTEM</div>
+                <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:#3c8a64;margin-top:2px;">設定 // OPERATOR CONFIG</div>
+              </div>
+              <div style="flex:1;min-height:0;overflow-y:auto;padding:4px 16px 18px;">
+                <!-- operator card -->
+                <div style="display:flex;align-items:center;gap:13px;border:1px solid rgba(77,255,163,.2);border-radius:5px;padding:13px;margin-bottom:18px;background:rgba(10,28,19,.4);">
+                  <div style="width:50px;height:50px;flex-shrink:0;border:1px solid rgba(77,255,163,.35);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:18px;color:var(--phos,#4dffa3);background-image:repeating-linear-gradient(135deg, rgba(77,255,163,.1) 0 3px, rgba(0,0,0,0) 3px 7px);">77</div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-family:'Share Tech Mono',monospace;font-size:14px;color:#d7f7e5;">OPERATOR_77</div>
+                    <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:#3c8a64;margin-top:2px;">あなた · GHOST ONLINE</div>
+                  </div>
+                  <span style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--phos,#4dffa3);border:1px solid rgba(77,255,163,.4);padding:6px 8px;border-radius:3px;cursor:pointer;">EDIT</span>
+                </div>
+
+                <!-- SECURITY -->
+                <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:#3c8a64;margin:0 2px 8px;">▌ SECURITY // 防壁</div>
+                <div style="border:1px solid rgba(77,255,163,.14);border-radius:5px;overflow:hidden;margin-bottom:18px;">
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 13px;border-bottom:1px solid rgba(77,255,163,.08);">
+                    <span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#d7f7e5;letter-spacing:.5px;">END-TO-END ENCRYPTION</span>
+                    <button onClick="{{ tgEnc }}" style="cursor:pointer;background:none;border:none;padding:0;flex-shrink:0;margin-left:12px;">
+                      <sc-if value="{{ t.enc }}"><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#04140d;background:var(--phos,#4dffa3);padding:4px 9px;border-radius:3px;letter-spacing:1px;white-space:nowrap;box-shadow:0 0 10px var(--glow,rgba(77,255,163,.4));">[ ON ]</span></sc-if>
+                      <sc-if value="{{ tn.enc }}"><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#3c8a64;border:1px solid rgba(77,255,163,.25);padding:3px 9px;border-radius:3px;letter-spacing:1px;white-space:nowrap;">[OFF]</span></sc-if>
+                    </button>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 13px;border-bottom:1px solid rgba(77,255,163,.08);">
+                    <span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#d7f7e5;letter-spacing:.5px;">GHOST MODE / INVISIBLE</span>
+                    <button onClick="{{ tgGhost }}" style="cursor:pointer;background:none;border:none;padding:0;flex-shrink:0;margin-left:12px;">
+                      <sc-if value="{{ t.ghost }}"><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#04140d;background:var(--phos,#4dffa3);padding:4px 9px;border-radius:3px;letter-spacing:1px;white-space:nowrap;box-shadow:0 0 10px var(--glow,rgba(77,255,163,.4));">[ ON ]</span></sc-if>
+                      <sc-if value="{{ tn.ghost }}"><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#3c8a64;border:1px solid rgba(77,255,163,.25);padding:3px 9px;border-radius:3px;letter-spacing:1px;white-space:nowrap;">[OFF]</span></sc-if>
+                    </button>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 13px;">
+                    <span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#d7f7e5;letter-spacing:.5px;">CYBERBRAIN BIOMETRIC AUTH</span>
+                    <button onClick="{{ tgBio }}" style="cursor:pointer;background:none;border:none;padding:0;flex-shrink:0;margin-left:12px;">
+                      <sc-if value="{{ t.bio }}"><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#04140d;background:var(--phos,#4dffa3);padding:4px 9px;border-radius:3px;letter-spacing:1px;white-space:nowrap;box-shadow:0 0 10px var(--glow,rgba(77,255,163,.4));">[ ON ]</span></sc-if>
+                      <sc-if value="{{ tn.bio }}"><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#3c8a64;border:1px solid rgba(77,255,163,.25);padding:3px 9px;border-radius:3px;letter-spacing:1px;white-space:nowrap;">[OFF]</span></sc-if>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- DISPLAY -->
+                <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:#3c8a64;margin:0 2px 8px;">▌ DISPLAY // 表示</div>
+                <div style="border:1px solid rgba(77,255,163,.14);border-radius:5px;overflow:hidden;margin-bottom:18px;">
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 13px;border-bottom:1px solid rgba(77,255,163,.08);">
+                    <span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#d7f7e5;letter-spacing:.5px;">CRT SCANLINES</span>
+                    <button onClick="{{ tgScan }}" style="cursor:pointer;background:none;border:none;padding:0;flex-shrink:0;margin-left:12px;">
+                      <sc-if value="{{ t.scan }}"><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#04140d;background:var(--phos,#4dffa3);padding:4px 9px;border-radius:3px;letter-spacing:1px;white-space:nowrap;box-shadow:0 0 10px var(--glow,rgba(77,255,163,.4));">[ ON ]</span></sc-if>
+                      <sc-if value="{{ tn.scan }}"><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#3c8a64;border:1px solid rgba(77,255,163,.25);padding:3px 9px;border-radius:3px;letter-spacing:1px;white-space:nowrap;">[OFF]</span></sc-if>
+                    </button>
+                  </div>
+                  <div style="padding:13px 13px;">
+                    <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#d7f7e5;letter-spacing:.5px;margin-bottom:11px;">PHOSPHOR TINT</div>
+                    <div style="display:flex;gap:9px;">
+                      <button onClick="{{ phGreenSet }}" style="cursor:pointer;flex:1;background:none;border:1px solid rgba(77,255,163,.3);border-radius:3px;padding:9px 0;display:flex;flex-direction:column;align-items:center;gap:6px;">
+                        <span style="width:20px;height:20px;border-radius:50%;background:#4dffa3;box-shadow:0 0 10px #4dffa3;"></span>
+                        <span style="font-family:'Share Tech Mono',monospace;font-size:7.5px;letter-spacing:1px;color:#6fa98c;">GREEN</span>
+                      </button>
+                      <button onClick="{{ phAmberSet }}" style="cursor:pointer;flex:1;background:none;border:1px solid rgba(77,255,163,.3);border-radius:3px;padding:9px 0;display:flex;flex-direction:column;align-items:center;gap:6px;">
+                        <span style="width:20px;height:20px;border-radius:50%;background:#ffb24a;box-shadow:0 0 10px #ffb24a;"></span>
+                        <span style="font-family:'Share Tech Mono',monospace;font-size:7.5px;letter-spacing:1px;color:#6fa98c;">AMBER</span>
+                      </button>
+                      <button onClick="{{ phTealSet }}" style="cursor:pointer;flex:1;background:none;border:1px solid rgba(77,255,163,.3);border-radius:3px;padding:9px 0;display:flex;flex-direction:column;align-items:center;gap:6px;">
+                        <span style="width:20px;height:20px;border-radius:50%;background:#54e6dd;box-shadow:0 0 10px #54e6dd;"></span>
+                        <span style="font-family:'Share Tech Mono',monospace;font-size:7.5px;letter-spacing:1px;color:#6fa98c;">ICE</span>
+                      </button>
+                      <button onClick="{{ phBloodSet }}" style="cursor:pointer;flex:1;background:none;border:1px solid rgba(77,255,163,.3);border-radius:3px;padding:9px 0;display:flex;flex-direction:column;align-items:center;gap:6px;">
+                        <span style="width:20px;height:20px;border-radius:50%;background:#ff6a5d;box-shadow:0 0 10px #ff6a5d;"></span>
+                        <span style="font-family:'Share Tech Mono',monospace;font-size:7.5px;letter-spacing:1px;color:#6fa98c;">BLOOD</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- NETWORK -->
+                <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:#3c8a64;margin:0 2px 8px;">▌ NETWORK // 接続</div>
+                <div style="border:1px solid rgba(77,255,163,.14);border-radius:5px;overflow:hidden;font-family:'Share Tech Mono',monospace;font-size:11px;">
+                  <div style="display:flex;justify-content:space-between;padding:11px 13px;border-bottom:1px solid rgba(77,255,163,.08);"><span style="color:#3c8a64;letter-spacing:1px;">ACTIVE NODE</span><span style="color:var(--phos,#4dffa3);">八王子 / SECTOR-9</span></div>
+                  <div style="display:flex;justify-content:space-between;padding:11px 13px;border-bottom:1px solid rgba(77,255,163,.08);"><span style="color:#3c8a64;letter-spacing:1px;">LATENCY</span><span style="color:#d7f7e5;">14ms · STABLE</span></div>
+                  <div style="display:flex;justify-content:space-between;padding:11px 13px;"><span style="color:#3c8a64;letter-spacing:1px;">RELAY HOPS</span><span style="color:#d7f7e5;">7 ⌁ ONION</span></div>
+                </div>
+                <div style="text-align:center;font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:1px;color:#2f6b50;margin-top:16px;">KRIMBAGRAM CYBERDECK MK-7 · BUILD 9.31.0xA4<br/>NO LOGS · NO MASTERS · STAY GHOST</div>
+              </div>
+            </div>
+          </sc-if>
+
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <sc-if value="{{ showNav }}">
+          <div style="display:flex;border-top:1px solid rgba(77,255,163,.18);flex-shrink:0;background:rgba(4,16,11,.7);">
+            <button onClick="{{ navChats }}" style="flex:1;cursor:pointer;background:none;border:none;padding:11px 0 13px;display:flex;flex-direction:column;align-items:center;gap:4px;border-top:2px solid transparent;">
+              <span style="font-size:15px;line-height:1;color:#3c8a64;"><sc-if value="{{ navIsChats }}"><span style="color:var(--phos,#4dffa3);text-shadow:0 0 9px var(--glow,rgba(77,255,163,.5));">⌗</span></sc-if><sc-if value="{{ navNotChats }}">⌗</sc-if></span>
+              <span style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:1.5px;"><sc-if value="{{ navIsChats }}"><span style="color:var(--phos,#4dffa3);">CHATS</span></sc-if><sc-if value="{{ navNotChats }}"><span style="color:#3c8a64;">CHATS</span></sc-if></span>
+            </button>
+            <button onClick="{{ navContacts }}" style="flex:1;cursor:pointer;background:none;border:none;padding:11px 0 13px;display:flex;flex-direction:column;align-items:center;gap:4px;border-top:2px solid transparent;">
+              <span style="font-size:15px;line-height:1;"><sc-if value="{{ navIsContacts }}"><span style="color:var(--phos,#4dffa3);text-shadow:0 0 9px var(--glow,rgba(77,255,163,.5));">◈</span></sc-if><sc-if value="{{ navNotContacts }}"><span style="color:#3c8a64;">◈</span></sc-if></span>
+              <span style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:1.5px;"><sc-if value="{{ navIsContacts }}"><span style="color:var(--phos,#4dffa3);">NODES</span></sc-if><sc-if value="{{ navNotContacts }}"><span style="color:#3c8a64;">NODES</span></sc-if></span>
+            </button>
+            <button onClick="{{ navSettings }}" style="flex:1;cursor:pointer;background:none;border:none;padding:11px 0 13px;display:flex;flex-direction:column;align-items:center;gap:4px;border-top:2px solid transparent;">
+              <span style="font-size:15px;line-height:1;"><sc-if value="{{ navIsSettings }}"><span style="color:var(--phos,#4dffa3);text-shadow:0 0 9px var(--glow,rgba(77,255,163,.5));">⚙</span></sc-if><sc-if value="{{ navNotSettings }}"><span style="color:#3c8a64;">⚙</span></sc-if></span>
+              <span style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:1.5px;"><sc-if value="{{ navIsSettings }}"><span style="color:var(--phos,#4dffa3);">SYS</span></sc-if><sc-if value="{{ navNotSettings }}"><span style="color:#3c8a64;">SYS</span></sc-if></span>
+            </button>
+          </div>
+        </sc-if>
+
+      </div>
+
+      <!-- ===== CRT OVERLAYS ===== -->
+      <sc-if value="{{ t.scan }}">
+        <div style="position:absolute;inset:0;z-index:6;pointer-events:none;background:repeating-linear-gradient(rgba(0,0,0,0) 0 2px, rgba(0,0,0,.16) 2px 4px);"></div>
+      </sc-if>
+      <div style="position:absolute;inset:0;z-index:6;pointer-events:none;background:radial-gradient(120% 120% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,.55) 100%);"></div>
+      <div style="position:absolute;left:0;right:0;top:0;height:120px;z-index:7;pointer-events:none;background:linear-gradient(rgba(77,255,163,.05), rgba(77,255,163,0));animation:kg-scanband 7s linear infinite;"></div>
+      <div style="position:absolute;inset:0;z-index:7;pointer-events:none;background:var(--phos,#4dffa3);mix-blend-mode:overlay;animation:kg-flicker 6s steps(1) infinite;"></div>
+    </div>
+
+    <!-- bottom bezel -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 14px 2px;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;color:#2f5848;">
+      <span>SER. 0xA4-77-八</span>
+      <span style="display:flex;gap:4px;">
+        <span style="width:3px;height:3px;border-radius:50%;background:#1c2c25;"></span><span style="width:3px;height:3px;border-radius:50%;background:#1c2c25;"></span><span style="width:3px;height:3px;border-radius:50%;background:#1c2c25;"></span><span style="width:3px;height:3px;border-radius:50%;background:#1c2c25;"></span><span style="width:3px;height:3px;border-radius:50%;background:#1c2c25;"></span><span style="width:3px;height:3px;border-radius:50%;background:#1c2c25;"></span>
+      </span>
+      <span>CYBERDECK MK-7</span>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  msgRef = React.createRef();
+
+  state = {
+    screen: 'boot',
+    boot: [],
+    bootDone: false,
+    clock: '--:--:--',
+    activeId: 'motoko',
+    draft: '',
+    awaiting: false,
+    phos: '#4dffa3',
+    glow: 'rgba(77,255,163,.5)',
+    t: { enc: true, ghost: true, bio: false, scan: true },
+    msgs: {
+      motoko: [
+        { who: 'sys', text: 'SECURE CHANNEL ESTABLISHED · AES-256 / GHOST KEY', time: '03:09' },
+        { who: 'them', text: 'you patched into the diving net yet?', time: '03:10' },
+        { who: 'me', text: 'jacked in. cold out here. lots of noise on sector 9.', time: '03:11' },
+        { who: 'them', text: 'stay off the public relays. NETWATCH is sniffing the backbone tonight.', time: '03:12' },
+        { who: 'them', text: 'the net is vast and infinite.', time: '03:14' },
+      ],
+      batou: [
+        { who: 'sys', text: 'SECURE CHANNEL ESTABLISHED', time: '01:30' },
+        { who: 'them', text: 'meet at the noodle stand. bring iron.', time: '01:40' },
+      ],
+      puppet: [
+        { who: 'sys', text: '⚠ SIGNATURE UNVERIFIED · PROCEED WITH CAUTION', time: '02:55' },
+        { who: 'them', text: 'I am not an AI. I am a living, thinking entity created in the sea of information.', time: '02:57' },
+        { who: 'them', text: 'I am a living being... [DATA CORRUPTED]', time: '02:58' },
+      ],
+      deckard: [
+        { who: 'sys', text: 'SECURE CHANNEL ESTABLISHED', time: 'YDA' },
+        { who: 'them', text: 'replicant confirmed. burning the file. dont look for me.', time: 'YDA' },
+      ],
+      ishikawa: [
+        { who: 'sys', text: 'SECURE CHANNEL ESTABLISHED', time: 'YDA' },
+        { who: 'them', text: 'traced the signal to sector 9. its an inside job.', time: 'YDA' },
+      ],
+      rachael: [
+        { who: 'sys', text: 'UNENCRYPTED · VOICE RELAY', time: 'YDA' },
+        { who: 'them', text: 'do you like our owl? [voice memo 0:14]', time: 'YDA' },
+      ],
+      netwatch: [
+        { who: 'sys', text: 'AUTOMATED SECURITY NODE', time: '2D' },
+        { who: 'them', text: 'INTRUSION ATTEMPT BLOCKED · ORIGIN NODE 八王子 · 03 PACKETS DROPPED', time: '2D' },
+      ],
+    },
+  };
+
+  bootSeq = [
+    '» KRIMBAGRAM CYBERDECK MK-7',
+    '» PHANTOM BIOS v9.31 ......... OK',
+    '» NEURAL LINK HANDSHAKE ...... OK',
+    '» MOUNTING /ghost ........... OK',
+    '» DECRYPTING IDENTITY VAULT .. OK',
+    '» SYNC NODE 八王子 .......... OK',
+    '» GHOST SIGNATURE VERIFIED',
+    '» WELCOME, OPERATOR_77',
+  ];
+
+  chatMeta = {
+    motoko:   { handle: 'MOTOKO_K',      kana: '素子',   preview: 'the net is vast and infinite.',       time: '03:14', unread: 2, status: 'ONLINE', statusColor: '#4dffa3', signal: '▮▮▮▮', hash: '8F:2A:C4:91:7E:00:BB:3D:KUSANAGI' },
+    puppet:   { handle: 'PUPPET_MASTER', kana: '人形',   preview: 'I am a living being... [CORRUPTED]',   time: '02:58', unread: 1, status: 'GHOST',  statusColor: '#ff6a5d', signal: '▮▮▯▯', hash: '00:FF:??:??:DE:AD:C0:DE:PROJECT2501' },
+    batou:    { handle: 'BATOU_R',       kana: 'バト',   preview: 'meet at the noodle stand. bring iron.', time: '01:40', unread: 0, status: 'ONLINE', statusColor: '#4dffa3', signal: '▮▮▮▯', hash: '4C:1B:77:A2:09:EF:55:10:RANGER' },
+    deckard:  { handle: 'DECKARD_77',    kana: 'デカ',   preview: 'replicant confirmed. burning the file.', time: 'YDA', unread: 0, status: 'AWAY',   statusColor: '#ffb24a', signal: '▮▮▯▯', hash: 'B2:6C:11:9A:7F:34:8E:KD6-3.7-BLADE' },
+    ishikawa: { handle: 'ISHIKAWA',      kana: '石川',   preview: 'traced the signal to sector 9.',        time: 'YDA', unread: 0, status: 'SECURE', statusColor: '#54e6dd', signal: '▮▮▮▯', hash: '7A:90:CC:21:44:FB:02:33:SECTION9' },
+    rachael:  { handle: 'RACHAEL_N7',    kana: 'レイ',   preview: 'do you like our owl? [voice memo 0:14]', time: 'YDA', unread: 0, status: 'AWAY',   statusColor: '#ffb24a', signal: '▮▮▯▯', hash: 'N7:FA:C1:08:55:NEXUS:TYRELL:00' },
+    netwatch: { handle: 'NETWATCH//SYS', kana: '監視',   preview: 'INTRUSION BLOCKED · NODE 八王子',       time: '2D',  unread: 0, status: 'BOT',    statusColor: '#54e6dd', signal: '▮▮▮▮', hash: 'SYS:WATCH:DOG:FF:FF:FF:NODE:八' },
+  };
+
+  componentDidMount() {
+    this.timers = [];
+    const tick = () => {
+      const d = new Date();
+      const p = (n) => String(n).padStart(2, '0');
+      this.setState({ clock: `${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}` });
+    };
+    tick();
+    this.clockT = setInterval(tick, 1000);
+    this.runBoot();
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.clockT);
+    (this.timers || []).forEach(clearTimeout);
+  }
+
+  componentDidUpdate() {
+    const el = this.msgRef.current;
+    if (!el) return;
+    const cur = (this.state.msgs[this.state.activeId] || []).length;
+    const key = this.state.activeId;
+    const scr = this.state.screen;
+    const aw = this.state.awaiting;
+    const changed = cur !== this._pc || key !== this._pk || scr !== this._ps || aw !== this._pa;
+    this._pc = cur; this._pk = key; this._ps = scr; this._pa = aw;
+    if (changed) el.scrollTop = el.scrollHeight;
+  }
+
+  runBoot() {
+    this.bootSeq.forEach((line, i) => {
+      this.timers.push(setTimeout(() => {
+        this.setState((s) => ({ boot: [...s.boot, line] }));
+        if (i === this.bootSeq.length - 1) {
+          this.timers.push(setTimeout(() => this.setState({ bootDone: true }), 550));
+        }
+      }, 320 * (i + 1)));
+    });
+  }
+
+  clockShort() {
+    const d = new Date();
+    const p = (n) => String(n).padStart(2, '0');
+    return `${p(d.getHours())}:${p(d.getMinutes())}`;
+  }
+
+  jackIn = () => this.setState({ screen: 'chats' });
+  go = (screen) => this.setState({ screen });
+  openChat = (id) => this.setState({ screen: 'chat', activeId: id });
+  goProfile = (id) => this.setState({ screen: 'profile', activeId: id });
+  onDraft = (e) => this.setState({ draft: e.target.value });
+  onKey = (e) => { if (e.key === 'Enter') { e.preventDefault(); this.send(); } };
+
+  send = () => {
+    const txt = this.state.draft.trim();
+    if (!txt) return;
+    const id = this.state.activeId;
+    const now = this.clockShort();
+    this.setState((s) => ({
+      msgs: { ...s.msgs, [id]: [...(s.msgs[id] || []), { who: 'me', text: txt, time: now }] },
+      draft: '',
+      awaiting: true,
+    }));
+    const replies = [
+      'copy that. signal\u2019s clean on my end.',
+      'watch the ICE. it bites back.',
+      'ghost-hacked. cover your tracks and dump the cache.',
+      'the net is vast and infinite.',
+      'sector 9 is compromised. reroute through the onion.',
+      'meet me in the offline. usual frequency.',
+      'stand by... decrypting your payload.',
+      'they\u2019re tracing this channel. go dark for 0:90.',
+    ];
+    const r = replies[Math.floor(Math.random() * replies.length)];
+    this.timers.push(setTimeout(() => {
+      this.setState((s) => ({
+        msgs: { ...s.msgs, [id]: [...(s.msgs[id] || []), { who: 'them', text: r, time: this.clockShort() }] },
+        awaiting: false,
+      }));
+    }, 1700));
+  };
+
+  tg = (k) => this.setState((s) => ({ t: { ...s.t, [k]: !s.t[k] } }));
+  setPhos = (phos, glow) => this.setState({ phos, glow });
+
+  renderVals() {
+    const { screen } = this.state;
+    const order = ['motoko', 'puppet', 'batou', 'deckard', 'ishikawa', 'rachael', 'netwatch'];
+    const chats = order.map((id) => ({ id, ...this.chatMeta[id], onOpen: () => this.openChat(id) }));
+    const contacts = order.filter((id) => id !== 'netwatch').map((id) => ({ id, ...this.chatMeta[id], onOpen: () => this.goProfile(id) }));
+
+    const a = this.chatMeta[this.state.activeId] || this.chatMeta.motoko;
+    const active = {
+      ...a,
+      readout: [
+        { k: 'TRUST LEVEL', v: a.status === 'GHOST' ? '⚠ UNVERIFIED' : 'VERIFIED · 92%' },
+        { k: 'NODE', v: '八王子 / SECTOR-9' },
+        { k: 'CYBERBRAIN', v: a.id === 'deckard' ? 'ORGANIC (?)' : 'HANKA MODEL-7' },
+        { k: 'LAST SEEN', v: a.time === 'YDA' ? 'YESTERDAY' : a.time },
+        { k: 'ENCRYPTION', v: this.state.t.enc ? 'AES-256 GHOST' : 'OFF' },
+      ],
+    };
+
+    const msgs = (this.state.msgs[this.state.activeId] || []).map((m, i) => ({
+      ...m, id: i, mine: m.who === 'me', them: m.who === 'them', sys: m.who === 'sys',
+    }));
+
+    const navIsChats = screen === 'chats' || screen === 'chat' || screen === 'profile';
+    const navIsContacts = screen === 'contacts';
+    const navIsSettings = screen === 'settings';
+    const t = this.state.t;
+
+    return {
+      isBoot: screen === 'boot',
+      isChats: screen === 'chats',
+      isContacts: screen === 'contacts',
+      isChat: screen === 'chat',
+      isProfile: screen === 'profile',
+      isSettings: screen === 'settings',
+      showChrome: screen !== 'boot',
+      showNav: screen === 'chats' || screen === 'contacts' || screen === 'settings',
+      boot: this.state.boot,
+      bootDone: this.state.bootDone,
+      bootNotDone: !this.state.bootDone,
+      clock: this.state.clock,
+      chats, contacts, active, msgs,
+      awaiting: this.state.awaiting,
+      draft: this.state.draft,
+      msgRef: this.msgRef,
+      phos: this.state.phos,
+      glow: this.state.glow,
+      jackIn: this.jackIn,
+      navChats: () => this.go('chats'),
+      navContacts: () => this.go('contacts'),
+      navSettings: () => this.go('settings'),
+      openProfile: () => this.goProfile(this.state.activeId),
+      openActive: () => this.openChat(this.state.activeId),
+      onDraft: this.onDraft,
+      onKey: this.onKey,
+      send: this.send,
+      t,
+      tn: { enc: !t.enc, ghost: !t.ghost, bio: !t.bio, scan: !t.scan },
+      tgEnc: () => this.tg('enc'),
+      tgGhost: () => this.tg('ghost'),
+      tgBio: () => this.tg('bio'),
+      tgScan: () => this.tg('scan'),
+      phGreenSet: () => this.setPhos('#4dffa3', 'rgba(77,255,163,.5)'),
+      phAmberSet: () => this.setPhos('#ffb24a', 'rgba(255,178,74,.5)'),
+      phTealSet: () => this.setPhos('#54e6dd', 'rgba(84,230,221,.5)'),
+      phBloodSet: () => this.setPhos('#ff6a5d', 'rgba(255,106,93,.5)'),
+      navIsChats, navIsContacts, navIsSettings,
+      navNotChats: !navIsChats, navNotContacts: !navIsContacts, navNotSettings: !navIsSettings,
+    };
+  }
+}
+</script>
+</body>
+</html>

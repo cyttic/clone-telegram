@@ -2404,9 +2404,19 @@ public class AndroidUtilities {
         synchronized (typefaceCache) {
             if (!typefaceCache.containsKey(assetPath)) {
                 try {
+                    // KrimbaGram cyberdeck: render all built-in Roboto faces with the bundled monospace
+                    // font for the terminal look. Weight/italic are still detected from the original
+                    // assetPath below and synthesized by the Typeface.Builder.
+                    String loadPath = assetPath;
+                    if (assetPath != null && assetPath.startsWith("fonts/")
+                            && (assetPath.contains("rmedium") || assetPath.contains("rextrabold")
+                                || assetPath.contains("ritalic") || assetPath.contains("rmediumitalic")
+                                || assetPath.contains("rcondensedbold") || assetPath.contains("mw_bold"))) {
+                        loadPath = "fonts/rmono.ttf";
+                    }
                     Typeface t;
                     if (Build.VERSION.SDK_INT >= 26) {
-                        Typeface.Builder builder = new Typeface.Builder(ApplicationLoader.applicationContext.getAssets(), assetPath);
+                        Typeface.Builder builder = new Typeface.Builder(ApplicationLoader.applicationContext.getAssets(), loadPath);
                         if (assetPath.contains("rextrabold")) {
                             builder.setWeight(800);
                         }
@@ -2418,7 +2428,7 @@ public class AndroidUtilities {
                         }
                         t = builder.build();
                     } else {
-                        t = Typeface.createFromAsset(ApplicationLoader.applicationContext.getAssets(), assetPath);
+                        t = Typeface.createFromAsset(ApplicationLoader.applicationContext.getAssets(), loadPath);
                     }
                     typefaceCache.put(assetPath, t);
                 } catch (Exception e) {

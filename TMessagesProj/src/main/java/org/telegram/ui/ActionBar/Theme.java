@@ -4718,6 +4718,20 @@ public class Theme {
         themes.add(themeInfo);
         themesDict.put("Night", themeInfo);
 
+        // ===== KrimbaGram cyberdeck theme (custom default look) =====
+        themeInfo = new ThemeInfo();
+        themeInfo.name = "KrimbaGram";
+        themeInfo.assetName = "krimbagram.attheme";
+        themeInfo.previewBackgroundColor = 0xff04090b;
+        themeInfo.previewInColor = 0xff0c2016;
+        themeInfo.previewOutColor = 0xff281c0a;
+        themeInfo.sortIndex = 0;
+        themeInfo.currentAccentId = DEFALT_THEME_ACCENT_ID;
+        themes.add(themeInfo);
+        themesDict.put("KrimbaGram", themeInfo);
+        // make it the default for fresh installs (both day and night slots)
+        defaultTheme = currentDayTheme = currentNightTheme = themeInfo;
+
         String themesString = themeConfig.getString("themes2", null);
 
         int remoteVersion = themeConfig.getInt("remote_version", 0);
