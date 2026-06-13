@@ -394,7 +394,7 @@ public class GlassTabView extends FrameLayout implements MainTabsLayout.Tab, Fac
         GlassTabView tab = new GlassTabView(context);
         tab.resourcesProvider = resourcesProvider;
         tab.tabAnimation = tabAnimation;
-        tab.textView.setText(LocaleController.getString(stringRes));
+        tab.textView.setText(LocaleController.getString(stringRes).toUpperCase()); // KrimbaGram: UPPERCASE menu labels
         tab.checkPlayAnimation(false);
         tab.imageView.setLayoutParams(LayoutHelper.createFrame(24, 24, Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, 4, 0, 0));
         tab.colorDefault = Theme.getColor(Theme.key_glass_tabUnselected, resourcesProvider);
@@ -406,7 +406,7 @@ public class GlassTabView extends FrameLayout implements MainTabsLayout.Tab, Fac
 
     public static GlassTabView createAvatar(Context context, Theme.ResourcesProvider resourcesProvider, int currentAccount, @StringRes int stringRes) {
         GlassTabView tab = new GlassTabView(context);
-        tab.textView.setText(LocaleController.getString(stringRes));
+        tab.textView.setText(LocaleController.getString(stringRes).toUpperCase()); // KrimbaGram: UPPERCASE menu labels
         tab.imageView.setVisibility(GONE);
 
         TLRPC.User user = MessagesController.getInstance(currentAccount).getUser(UserConfig.getInstance(currentAccount).getClientUserId());

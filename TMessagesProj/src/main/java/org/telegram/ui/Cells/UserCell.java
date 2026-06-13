@@ -625,7 +625,7 @@ public class UserCell extends FrameLayout implements NotificationCenter.Notifica
 
         if (currentName != null) {
             lastName = null;
-            CharSequence name = currentName;
+            CharSequence name = AndroidUtilities.krimbaLower(currentName); // KrimbaGram: lowercase contact names
             if (query != null) {
                 name = AndroidUtilities.highlightText(name, query, resourcesProvider);
             }
@@ -643,7 +643,7 @@ public class UserCell extends FrameLayout implements NotificationCenter.Notifica
             } else {
                 lastName = "";
             }
-            CharSequence name = lastName;
+            CharSequence name = AndroidUtilities.krimbaLower(lastName); // KrimbaGram: lowercase contact names
             if (query != null) {
                 name = AndroidUtilities.highlightText(name, query, resourcesProvider);
             }

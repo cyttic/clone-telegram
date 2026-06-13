@@ -6883,15 +6883,21 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         }
     }
 
-    // KrimbaGram cyberdeck: live digital clock shown as the action-bar subtitle on the chats screen
+    // KrimbaGram cyberdeck: action-bar subtitle counts UP from the last received message (resets to 0 on new msg)
     private Runnable krimbaClock;
+    private long krimbaLastMsgTime = System.currentTimeMillis();
+    private final NotificationCenter.NotificationCenterDelegate krimbaMsgObserver = (id, account, args) -> {
+        if (id == NotificationCenter.didReceiveNewMessages) {
+            krimbaLastMsgTime = System.currentTimeMillis();
+        }
+    };
     private void startKrimbaClock() {
         if (krimbaClock == null) {
             krimbaClock = () -> {
                 try {
-                    java.util.Calendar c = java.util.Calendar.getInstance();
-                    String t = String.format(java.util.Locale.US, "通信 // %02d:%02d:%02d · SECURE",
-                            c.get(java.util.Calendar.HOUR_OF_DAY), c.get(java.util.Calendar.MINUTE), c.get(java.util.Calendar.SECOND));
+                    long elapsed = Math.max(0, System.currentTimeMillis() - krimbaLastMsgTime) / 1000L;
+                    long hh = elapsed / 3600, mm = (elapsed % 3600) / 60, ss = elapsed % 60;
+                    String t = String.format(java.util.Locale.US, "通信 // SINCE LAST TX %02d:%02d:%02d", hh, mm, ss);
                     if (actionBar != null) {
                         actionBar.setSubtitle(t);
                     }
@@ -6907,6 +6913,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
     public void onResume() {
         super.onResume();
         if (folderId == 0 && !onlySelect) {
+            getNotificationCenter().addObserver(krimbaMsgObserver, NotificationCenter.didReceiveNewMessages);
             startKrimbaClock();
         }
         if (dialogStoriesCell != null) {
@@ -7127,6 +7134,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         if (krimbaClock != null) {
             AndroidUtilities.cancelRunOnUIThread(krimbaClock);
         }
+        getNotificationCenter().removeObserver(krimbaMsgObserver, NotificationCenter.didReceiveNewMessages);
         if (storiesBulletin != null) {
             storiesBulletin.hide();
             storiesBulletin = null;

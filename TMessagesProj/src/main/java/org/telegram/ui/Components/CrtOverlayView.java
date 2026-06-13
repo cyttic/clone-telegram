@@ -23,9 +23,10 @@ public class CrtOverlayView extends View {
 
     private final Paint scanlinePaint = new Paint();
     private final Paint bandPaint = new Paint();
+    private final Paint beamPaint = new Paint();
     private final long start = SystemClock.elapsedRealtime();
 
-    private final int bandHeight = AndroidUtilities.dp(150);
+    private final int bandHeight = AndroidUtilities.dp(170);
     private LinearGradient bandGradient;
     private int gradientForHeight = -1;
 
@@ -35,13 +36,15 @@ public class CrtOverlayView extends View {
         setClickable(false);
         setFocusable(false);
 
-        // scanline tile: a few transparent rows then one faint dark row, repeated.
-        int line = AndroidUtilities.dp(3);
+        // scanline tile: tight, darker lines for a pronounced CRT raster.
+        int line = AndroidUtilities.dp(2);
         Bitmap tile = Bitmap.createBitmap(1, line, Bitmap.Config.ARGB_8888);
         for (int y = 0; y < line; y++) {
-            tile.setPixel(0, y, y >= line - 1 ? 0x22000000 : 0x00000000);
+            tile.setPixel(0, y, y >= line - 1 ? 0x55000000 : 0x00000000);
         }
         scanlinePaint.setShader(new BitmapShader(tile, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
+
+        beamPaint.setColor(0x664DFFA3);
     }
 
     @Override
@@ -61,22 +64,24 @@ public class CrtOverlayView extends View {
         // 1) static scanlines across the whole surface
         canvas.drawRect(0, 0, w, h, scanlinePaint);
 
-        // 2) slow phosphor scan-band sweeping top -> bottom (~7s loop)
+        // 2) phosphor scan-band sweeping top -> bottom (~5s loop), with a sharp beam edge
         if (bandGradient == null || gradientForHeight != bandHeight) {
             bandGradient = new LinearGradient(0, 0, 0, bandHeight,
-                    new int[]{0x00000000, 0x144DFFA3, 0x00000000}, null, Shader.TileMode.CLAMP);
+                    new int[]{0x00000000, 0x3A4DFFA3, 0x00000000}, null, Shader.TileMode.CLAMP);
             gradientForHeight = bandHeight;
             bandPaint.setShader(bandGradient);
         }
-        final float t = (elapsed % 7000L) / 7000f;
+        final float t = (elapsed % 5000L) / 5000f;
         final float bandY = -bandHeight + t * (h + bandHeight);
         canvas.save();
         canvas.translate(0, bandY);
         canvas.drawRect(0, 0, w, bandHeight, bandPaint);
         canvas.restore();
+        // sharp electron-beam line at the leading edge of the band
+        canvas.drawRect(0, bandY + bandHeight - AndroidUtilities.dp(1.5f), w, bandY + bandHeight, beamPaint);
 
-        // 3) subtle phosphor flicker
-        final int a = (int) (5 + 6 * Math.abs(Math.sin(elapsed / 90.0)));
+        // 3) phosphor flicker
+        final int a = (int) (10 + 14 * Math.abs(Math.sin(elapsed / 70.0)));
         canvas.drawColor((a << 24) | 0x004DFFA3);
 
         postInvalidateOnAnimation();

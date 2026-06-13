@@ -569,8 +569,8 @@ public class AvatarDrawable extends Drawable {
             advancedGradient.setBounds(bounds.left, bounds.top, bounds.left + size, bounds.top + size);
             backgroundPaint = advancedGradient.paint;
         } else if (hasGradient) {
-            int color = ColorUtils.setAlphaComponent(getColor(), alpha);
-            int color2 = ColorUtils.setAlphaComponent(getColor2(), alpha);
+            int color = ColorUtils.setAlphaComponent(krimbaPhosphor(getColor()), alpha);
+            int color2 = ColorUtils.setAlphaComponent(krimbaPhosphor(getColor2()), alpha);
             if (gradient == null || gradientBottom != bounds.height() || gradientColor1 != color || gradientColor2 != color2) {
                 gradient = new LinearGradient(0, 0, 0, gradientBottom = bounds.height(), gradientColor1 = color, gradientColor2 = color2, Shader.TileMode.CLAMP);
             }
@@ -578,7 +578,7 @@ public class AvatarDrawable extends Drawable {
             backgroundPaint.setAlpha(alpha);
         } else {
             backgroundPaint.setShader(null);
-            backgroundPaint.setColor(ColorUtils.setAlphaComponent(getColor(), alpha));
+            backgroundPaint.setColor(ColorUtils.setAlphaComponent(krimbaPhosphor(getColor()), alpha));
         }
         canvas.save();
         canvas.translate(bounds.left, bounds.top);
@@ -775,5 +775,15 @@ public class AvatarDrawable extends Drawable {
     public void setRoundRadius(int roundRadius) {
         // KrimbaGram cyberdeck: cap the radius so avatars are rounded squares, never circles
         this.roundRadius = Math.min(roundRadius, AndroidUtilities.dp(6));
+    }
+
+    // KrimbaGram: map any color to the monochrome phosphor-green palette (no foreign hues)
+    public static int krimbaPhosphor(int color) {
+        int r = android.graphics.Color.red(color);
+        int g = android.graphics.Color.green(color);
+        int b = android.graphics.Color.blue(color);
+        int gray = (int) (0.299f * r + 0.587f * g + 0.114f * b);
+        return android.graphics.Color.argb(android.graphics.Color.alpha(color),
+                (int) (gray * 0.30f), gray, (int) (gray * 0.64f));
     }
 }

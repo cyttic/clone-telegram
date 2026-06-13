@@ -2400,6 +2400,25 @@ public class AndroidUtilities {
         return result;
     }
 
+    // KrimbaGram: lowercase a display name while preserving any spans (emoji, badges, highlights).
+    public static CharSequence krimbaLower(CharSequence cs) {
+        if (cs == null) {
+            return null;
+        }
+        if (cs instanceof android.text.Spanned) {
+            android.text.SpannableStringBuilder sb = new android.text.SpannableStringBuilder(cs);
+            for (int i = 0; i < sb.length(); i++) {
+                char c = sb.charAt(i);
+                char l = Character.toLowerCase(c);
+                if (l != c) {
+                    sb.replace(i, i + 1, String.valueOf(l));
+                }
+            }
+            return sb;
+        }
+        return cs.toString().toLowerCase();
+    }
+
     public static Typeface getTypeface(String assetPath) {
         synchronized (typefaceCache) {
             if (!typefaceCache.containsKey(assetPath)) {

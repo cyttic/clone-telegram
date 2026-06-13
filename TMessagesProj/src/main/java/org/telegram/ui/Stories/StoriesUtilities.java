@@ -665,11 +665,8 @@ public class StoriesUtilities {
             canvas.drawRoundRect(forumRect, dp(18), dp(18), paint);
             return;
         }
-        if (params.progressToArc == 0) {
-            canvas.drawCircle(rectTmp.centerX(), rectTmp.centerY(), rectTmp.width() / 2f, paint);
-        } else {
-            canvas.drawArc(rectTmp, 360 + params.progressToArc / 2f, 360 - params.progressToArc, false, paint);
-        }
+        // KrimbaGram cyberdeck: square (rounded) story frame instead of a circle
+        canvas.drawRoundRect(rectTmp, dp(7), dp(7), paint);
     }
 
     private static final Path forumRoundRectPath = new Path();
@@ -678,8 +675,9 @@ public class StoriesUtilities {
     private static final Path forumSegmentPath = new Path();
 
     private static void drawSegment(Canvas canvas, RectF rectTmp, Paint paint, float startAngle, float endAngle, AvatarStoryParams params, boolean isForum) {
-        if (isForum) {
-            float r = rectTmp.height() * 0.32f;
+        // KrimbaGram cyberdeck: draw story segments along a rounded-square path (never a circle)
+        if (true) {
+            float r = isForum ? rectTmp.height() * 0.32f : dp(7);
             float rotateAngle = (((int)(startAngle)) / 90) * 90 + 90;
             float pathAngleStart = -199 + rotateAngle;
             float percentFrom = (startAngle - pathAngleStart) / 360;

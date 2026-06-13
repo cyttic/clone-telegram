@@ -312,9 +312,15 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
         iBlur3FactoryGlass.setLiquidGlassEffectAllowed(LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS));
 
         tabsViewBackground = iBlur3FactoryGlass.create(tabsView, BlurredBackgroundProviderImpl.mainTabs(resourceProvider));
-        tabsViewBackground.setRadius(dp(DialogsActivity.MAIN_TABS_HEIGHT / 2f));
+        tabsViewBackground.setRadius(dp(8)); // KrimbaGram: rectangular bottom bar instead of a pill
         tabsViewBackground.setPadding(dp(DialogsActivity.MAIN_TABS_MARGIN - 0.334f));
         tabsView.setBackground(tabsViewBackground);
+        // KrimbaGram: solid amber (GRAM color) frame around the bottom tab bar
+        android.graphics.drawable.GradientDrawable kgTabsBorder = new android.graphics.drawable.GradientDrawable();
+        kgTabsBorder.setColor(0x00000000);
+        kgTabsBorder.setCornerRadius(dp(8));
+        kgTabsBorder.setStroke(dp(2), 0xFFFFB24A);
+        tabsView.setForeground(kgTabsBorder);
 
         BlurredBackgroundDrawableViewFactory iBlur3FactoryFade = new BlurredBackgroundDrawableViewFactory(iBlur3SourceColor);
         iBlur3FactoryFade.setSourceRootView(viewPositionWatcher, contentView);

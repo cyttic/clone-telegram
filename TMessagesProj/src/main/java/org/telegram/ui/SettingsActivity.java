@@ -287,7 +287,8 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         actionBar.setBackButtonImage(R.drawable.ic_ab_back);
         actionBar.setAllowOverlayTitle(true);
         actionBar.setUseContainerForTitles();
-        actionBar.setTitle(getString(R.string.Settings));
+        actionBar.setTitle("SYSTEM");
+        actionBar.setSubtitle("設定 // OPERATOR CONFIG"); // KrimbaGram hacker-style kana
         actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
             @Override
             public void onItemClick(int id) {

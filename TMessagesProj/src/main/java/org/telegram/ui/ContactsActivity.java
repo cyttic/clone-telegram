@@ -288,7 +288,8 @@ public class ContactsActivity extends BaseFragment implements FactorAnimator.Tar
                 actionBar.setTitle(getString(createSecretChat ? R.string.NewSecretChat : R.string.NewMessageTitle));
             }
         } else {
-            actionBar.setTitle(getString(R.string.Contacts));
+            actionBar.setTitle("OPERATIVES");
+            actionBar.setSubtitle("接触 // GHOST REGISTRY"); // KrimbaGram hacker-style kana
         }
 
         backDrawable = new BackDrawable(false);

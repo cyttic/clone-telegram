@@ -1045,6 +1045,7 @@ public class DialogStoriesCell extends FrameLayout implements NotificationCenter
 
     AnimatorSet storiesAnimatorSet;
     public void setProgressToCollapse(float progress, boolean animated) {
+        progress = 0; // KrimbaGram: never collapse the stories row into the Telegram-logo header
         if (collapsedProgress1 == progress) {
             return;
         }

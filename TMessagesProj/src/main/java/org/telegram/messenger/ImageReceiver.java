@@ -429,6 +429,7 @@ public class ImageReceiver implements NotificationCenter.NotificationCenterDeleg
             parentObject = object;
         }
         setUseRoundForThumbDrawable(true);
+        setColorFilter(getKrimbaPhosphorFilter()); // KrimbaGram: phosphor-tint every avatar photo
         BitmapDrawable strippedBitmap = null;
         boolean hasStripped = false;
         ImageLocation videoLocation = null;
@@ -814,6 +815,25 @@ public class ImageReceiver implements NotificationCenter.NotificationCenterDeleg
 
     public void setColorFilter(ColorFilter filter) {
         colorFilter = filter;
+    }
+
+    // KrimbaGram cyberdeck: a monochrome phosphor-green filter applied to every avatar photo so the
+    // UI stays within the green/amber palette (no foreign colors).
+    private static ColorFilter krimbaPhosphorFilter;
+    public static ColorFilter getKrimbaPhosphorFilter() {
+        if (krimbaPhosphorFilter == null) {
+            android.graphics.ColorMatrix sat = new android.graphics.ColorMatrix();
+            sat.setSaturation(0f);
+            android.graphics.ColorMatrix tint = new android.graphics.ColorMatrix(new float[]{
+                    0.30f, 0, 0, 0, 0,
+                    0, 1.00f, 0, 0, 0,
+                    0, 0, 0.64f, 0, 0,
+                    0, 0, 0, 1, 0
+            });
+            tint.preConcat(sat);
+            krimbaPhosphorFilter = new android.graphics.ColorMatrixColorFilter(tint);
+        }
+        return krimbaPhosphorFilter;
     }
 
     public void setDelegate(ImageReceiverDelegate delegate) {

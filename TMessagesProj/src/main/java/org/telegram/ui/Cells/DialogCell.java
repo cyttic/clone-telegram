@@ -2274,7 +2274,7 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
             if (nameString instanceof String) {
                 nameString = ((String) nameString).replace('\n', ' ');
             }
-            CharSequence nameStringFinal = nameString;
+            CharSequence nameStringFinal = AndroidUtilities.krimbaLower(nameString); // KrimbaGram: lowercase chat names
             if (nameLayoutEllipsizeByGradient) {
                 nameLayoutFits = nameStringFinal.length() == TextUtils.ellipsize(nameStringFinal, Theme.dialogs_namePaint[paintIndex], ellipsizeWidth, TextUtils.TruncateAt.END).length();
                 ellipsizeWidth += dp(48);
