@@ -17,6 +17,8 @@ configurations.all {
 }
 
 dependencies {
+    // KrimbaGram voice changer: on-device RVC inference (ONNX Runtime Mobile)
+    implementation 'com.microsoft.onnxruntime:onnxruntime-android:1.19.2'
     implementation 'androidx.core:core:1.16.0'
     implementation 'androidx.palette:palette:1.0.0'
     implementation 'androidx.exifinterface:exifinterface:1.3.6'

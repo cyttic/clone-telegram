@@ -1096,6 +1096,9 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
 
     private ArrayList<ByteBuffer> recordBuffers = new ArrayList<>();
     private ByteBuffer fileBuffer;
+    // KrimbaGram voice changer: tee raw PCM during recording so we can re-voice it before sending
+    public static boolean voiceChangerEnabled = true;
+    private java.io.ByteArrayOutputStream krimbaTee;
     public int recordBufferSize = 1280;
     public int sampleRate = 48000;
     private int sendAfterDone;
@@ -1123,6 +1126,14 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
                 int len = audioRecorder.read(buffer, buffer.capacity());
                 if (len > 0) {
                     buffer.limit(len);
+                    if (voiceChangerEnabled) {
+                        try {
+                            if (krimbaTee == null) krimbaTee = new java.io.ByteArrayOutputStream();
+                            ByteBuffer dup = buffer.duplicate(); dup.position(0); dup.limit(len);
+                            byte[] tmp = new byte[len]; dup.get(tmp, 0, len);
+                            krimbaTee.write(tmp);
+                        } catch (Throwable ignore) {}
+                    }
                     double sum = 0;
                     try {
                         long newSamplesCount = samplesCount + len / 2;
@@ -4799,6 +4810,7 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
                 recordTimeCount = 0;
                 writtenFrame = 0;
                 samplesCount = 0;
+                krimbaTee = null; // KrimbaGram: start a fresh PCM tee for this recording
                 recordDialogId = dialogId;
                 recordMonoForumPeerId = monoForumPeerId;
                 recordMonoForumSuggestionParams = suggestionParams;
@@ -4906,7 +4918,80 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
         ignoreOnPause = false;
     }
 
+    // KrimbaGram: re-voice the teed PCM and re-encode it into outFile (Opus). Runs on fileEncodingQueue.
+    private void krimbaApplyVoiceChanger(File outFile) {
+        android.util.Log.i("KRIMBAVC", "hook reached: enabled=" + voiceChangerEnabled + " teeBytes=" + (krimbaTee == null ? -1 : krimbaTee.size()) + " out=" + outFile);
+        if (!voiceChangerEnabled || krimbaTee == null || krimbaTee.size() == 0 || outFile == null) return;
+        try {
+            org.telegram.messenger.voicechanger.VoiceChanger vc = org.telegram.messenger.voicechanger.VoiceChanger.getInstance();
+            if (!vc.ensureLoaded(ApplicationLoader.applicationContext)) return; // models not installed yet
+            byte[] pcmBytes = krimbaTee.toByteArray();
+            short[] pcm = new short[pcmBytes.length / 2];
+            ByteBuffer.wrap(pcmBytes).order(ByteOrder.nativeOrder()).asShortBuffer().get(pcm);
+            short[] conv = vc.convert(pcm, sampleRate, 0, 0);
+            if (conv == null || conv.length == 0) return;
+            short[] conv48 = krimbaResample(conv, org.telegram.messenger.voicechanger.VoiceChanger.MODEL_SR, sampleRate);
+            krimbaReencodeOpus(conv48, outFile);
+            recordTimeCount = (long) conv48.length * 1000L / sampleRate;
+        } catch (Throwable e) {
+            FileLog.e(e);
+        }
+    }
+
+    private static short[] krimbaResample(short[] in, int srIn, int srOut) {
+        if (srIn == srOut) return in;
+        double ratio = (double) srOut / srIn;
+        int n = (int) Math.floor(in.length * ratio);
+        short[] out = new short[n];
+        for (int i = 0; i < n; i++) {
+            double pos = i / ratio;
+            int i0 = (int) Math.floor(pos);
+            int i1 = Math.min(i0 + 1, in.length - 1);
+            double frac = pos - i0;
+            out[i] = (short) Math.round(in[i0] * (1 - frac) + in[i1] * frac);
+        }
+        return out;
+    }
+
+    private void krimbaReencodeOpus(short[] pcm, File outFile) {
+        try {
+            if (fileBuffer == null) {
+                fileBuffer = ByteBuffer.allocateDirect(1920);
+                fileBuffer.order(ByteOrder.nativeOrder());
+            }
+            if (startRecord(outFile.getAbsolutePath(), sampleRate) == 0) {
+                return;
+            }
+            ByteBuffer src = ByteBuffer.allocateDirect(pcm.length * 2);
+            src.order(ByteOrder.nativeOrder());
+            for (short s : pcm) src.putShort(s);
+            src.flip();
+            fileBuffer.rewind();
+            while (src.hasRemaining()) {
+                int oldLimit = -1;
+                if (src.remaining() > fileBuffer.remaining()) {
+                    oldLimit = src.limit();
+                    src.limit(fileBuffer.remaining() + src.position());
+                }
+                fileBuffer.put(src);
+                if (fileBuffer.position() == fileBuffer.limit()) {
+                    writeFrame(fileBuffer, fileBuffer.limit());
+                    fileBuffer.rewind();
+                }
+                if (oldLimit != -1) src.limit(oldLimit);
+            }
+            if (fileBuffer.position() > 0) {
+                writeFrame(fileBuffer, fileBuffer.position());
+                fileBuffer.rewind();
+            }
+            stopRecord();
+        } catch (Throwable e) {
+            FileLog.e(e);
+        }
+    }
+
     private void stopRecordingInternal(final int send, boolean notify, int scheduleDate, boolean once, long payStars) {
+        android.util.Log.i("KRIMBAVC", "stopRecordingInternal: send=" + send + " file=" + recordingAudioFile);
         if (send != 0 && recordingAudioFile != null) {
             final TLRPC.TL_document audioToSend = recordingAudio;
             final File recordingAudioFileToSend_ = recordingAudioFile;
@@ -4923,6 +5008,9 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
                     }
                     return;
                 }
+                // KrimbaGram: re-voice the recording before it gets sent
+                android.util.Log.i("KRIMBAVC", "stopRecordingInternal queue: send=" + send + " prev=" + recordingPrevAudioFileToSend_ + " tee=" + (krimbaTee == null ? -1 : krimbaTee.size()));
+                krimbaApplyVoiceChanger(recordingAudioFileToSend);
                 if (BuildVars.LOGS_ENABLED) {
                     FileLog.d("stop recording internal in queue " + (recordingAudioFileToSend.exists() + " " + recordingAudioFileToSend.length()));
                 }
